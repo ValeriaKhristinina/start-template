@@ -4,12 +4,17 @@
   "description": "Template for layout",
   "author": "ValeriyaKhristinina",
   "license": "ISC",
+  "scripts": {
+    "start": "./node_modules/gulp/bin/gulp.js dev"
+  },
   "devDependencies": {
     "browser-sync": "^2.18.5",
     "del": "^2.2.2",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-clean-css": "^2.3.0",
     "gulp-concat": "^2.6.1",
-    "gulp-less": "^3.3.0"
+    "gulp-less": "^3.3.0",
+    "gulp-pug": "^3.3.0",
+    "gulp-stylus": "^2.6.0"
   }
 }

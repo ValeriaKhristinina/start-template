@@ -4,19 +4,31 @@ const cleanCSS = require('gulp-clean-css');
 const concat = require('gulp-concat');
 const del = require('del');
 const browserSync = require('browser-sync').create();
+const pug = require('gulp-pug');
+const stylus = require('gulp-stylus');
 
 const destName = 'public';
 
+
+ //cборка шаблонов
+gulp.task('templates', function buildHTML() {
+    return gulp.src('./source/pages/*.pug')
+    .pipe(pug({
+        // Your options in here.
+    }))
+    .pipe(gulp.dest(destName));
+});
+
+
 //cборка стилей
 gulp.task('style', function() {
-    //проходит по всем папкам в source/style и берет все файла с расширением .less
-    return gulp.src('./source/style/**/*.less')
-        .pipe(less()) // переводит less в обычный css
-        .pipe(concat('style.css')) // соединяем все файлы в один style.css
+    // в source/styles сразу берет style.styl
+    return gulp.src('./source/style/style.styl')
+        .pipe(stylus()) // переводит stylus в обычный css
         .pipe(cleanCSS({
             compatibility: 'ie8'
         })) // минимизируем файл
-        .pipe(gulp.dest(destName + '/style')); // отправляем получившийся результат в папку public
+        .pipe(gulp.dest(destName + '/styles')); // отправляем получившийся результат в папку public
 });
 
 // переносит все картинки и шрифты в public
@@ -34,8 +46,9 @@ gulp.task('clean', function() {
 
 //следит за измененим стилей и ассетсов, и если что-то в файлах изменилось, запускает соответсвующие задачи
 gulp.task('watch', function() {
-    gulp.watch('source/style/**/*.*', gulp.series('style'))
+    gulp.watch('source/**/*.styl', gulp.series('style'))
     gulp.watch('source/assets/**/*.*', gulp.series('assets'))
+    gulp.watch('source/**/*.pug', gulp.series('templates'))
 })
 
 gulp.task('serve', function() {
@@ -47,7 +60,7 @@ gulp.task('serve', function() {
 })
 
 //просто собирает проект
-gulp.task('build', gulp.series('clean', 'style', 'assets'));
+gulp.task('build', gulp.series('clean', 'style', 'templates', 'assets'));
 
 // собирает проект, а потом следит за изменениями
 gulp.task('dev', gulp.series('build', gulp.parallel('watch', 'serve')))
